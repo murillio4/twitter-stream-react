@@ -1,53 +1,85 @@
 let app = require('express')(),
-		http = require('http').Server(app),
-		io = require('socket.io')(http),
-		Twit = require('twit');
+	http = require('http').Server(app),
+	io = require('socket.io')(http),
+	Twit = require('twit'),
+	Validator = require('jsonschema').Validator;
 
-let twitter = new Twit({
+let v = new Validator(), 
+	twitter = new Twit({
 		consumer_key: 'iJx2n1j0vDT8JCdm87LxidNV7',
 		consumer_secret: 'GPL2xWJxVbT5S3dBembZjQpvO6L5Bbt9ip5bjsy6PLLo3dB8p6',
 		access_token: '404267567-BTqZo9oCaasiwYDnSRKE4dD3tDTcpd2PB3wAg5dF',
 		access_token_secret: '6sx1JrvIg8qWr89zCNCoqeT5OarI04bWVwMRmRZx5VaQk',
 		timeout_ms: 60 * 1000,
-});
+	});
+
+const	baseSchema = {
+		"id": "/baseSchema",
+		"type": "object",
+		"properties": {
+			"track": {
+				"type": "array",
+				"items": { "type": "string" },
+				"minItems": 1,
+				"uniqueItems": true
+			},
+			"filter": { "type": "string" }
+		},
+		"required": ["track"]
+	};
+
+
+const check_validate_json = data => {
+	let parsed;
+	//parse incoming data to json, if not json send error
+	try {
+		parsed = JSON.parse(data);
+	} catch (e) {
+		return { error: "request need to be json" };
+	}
+
+	let result = v.validate(parsed, baseSchema)
+	if(!result.valid)
+		return {error: result.errors};
+
+	return parsed;
+}
+
 
 io.on('connection', (ws) => {
 	console.log("New connection");
 
-	ws.on('new-stream', (data) => {
-		let parsed;
-		//parse incoming data to json, if not json send error
-		try {
-			parsed = JSON.parse(data);
-		} catch (e) {
-			ws.emit('wrong-format', JSON.stringify({error: "request need to be json"}));
-			return null;
-		}
-
+	ws.on('start-stream', (data) => {
+		let parsed = check_validate_json(data)
 		//if track is not defined send error
-		if (parsed.track === undefined) {
-			ws.emit('wrong-format', JSON.stringify({error: "tracker cannot be empty"}));
+		if (parsed.error !== undefined) {
+			ws.emit('format', parsed)
 		} else {
 			//if an old stream is up (maybe not needed)
-			if (ws.stream !== undefined) ws.stream.stop();
+			if (ws.stream !== undefined) ws.stream.stop()
 
-			console.log("Starting new stream")
+			let filter = (parsed.filter === undefined)? 'message': parsed.filter
 			//create new stream
 			ws.stream = twitter.stream('statuses/filter', { track: parsed.track })
-			ws.stream.on('tweet', function (tweet) {
+			ws.stream.on(filter, (tweet) => {
 				//if client is ready for data send
 				if (ws.connected === true)
 					ws.emit('new-stream-data', JSON.stringify(tweet))
-			});
+			})
 		}
-	});
+	})
+
+	ws.on('stop-stream', () => {
+		//if stream is up, close it
+		if (ws.stream !== undefined) ws.stream.stop()
+	})
 
 	ws.on('disconnected', () => {
-		//on close if stream is up, close it
-		if (ws.stream !== undefined) ws.stream.stop();
+		//if stream is up, close it
+		if (ws.stream !== undefined) ws.stream.stop()
 	});
 });
 
-http.listen(9000, function () {
-	console.log('listening on *:9000');
+http.listen(9000, () => {
+	console.log('listening on *:9000')
 });

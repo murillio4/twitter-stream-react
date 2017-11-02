@@ -7,6 +7,7 @@
     "fetch": "^1.1.0",
     "http": "^0.0.0",
     "isomorphic-fetch": "^2.2.1",
+    "jsonschema": "^1.2.0",
     "material-design-lite": "^1.3.0",
     "material-ui": "^0.19.4",
     "material-ui-chip-input": "^0.18.2",
@@ -34,4 +35,3 @@
     "concurrently": "^3.5.0"
   }
 }
-

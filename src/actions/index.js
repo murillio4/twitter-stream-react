@@ -21,7 +21,7 @@ export const toggleStream = () => {
 
 export const toggleStreamSocket = (ws) => {
     return (dispatch, getState) => {
-        ws.emit('new-stream', JSON.stringify({track:"pewdiepie"}))
+        ws.emit('start-stream', JSON.stringify({track:["pewdiepie"]}))
     }
 }
 
