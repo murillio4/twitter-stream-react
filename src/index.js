@@ -1,15 +1,24 @@
 import React from 'react';
-import {render} from 'react-dom';
+import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-//import registerServiceWorker from './registerServiceWorker';
-import {MuiThemeProvider} from 'material-ui/styles';
-import {Toolbar} from 'material-ui';
+import { AppBar, MuiThemeProvider } from 'material-ui';
 import 'normalize.css';
 
+import Menu from './components/Menu';
+import Page from './components/Page';
+
+import store from './store';
+
 const App = () => (
-	<Provider >
+	<Provider store={store}>
 		<MuiThemeProvider>
-			<Toolbar />
+			<div>
+        <Menu/>
+        <div style={{paddingLeft: "300px"}}>
+          <AppBar showMenuIconButton={false} />
+          <Page />
+        </div>
+      </div>
 		</MuiThemeProvider>
 	</Provider>
 );
@@ -18,5 +27,3 @@ render(
   <App />,
   document.getElementById('app')
 );
-
-//registerServiceWorker();
