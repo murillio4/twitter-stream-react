@@ -1,18 +1,32 @@
-import { LOAD_TWEET, TOGGLE_STREAM } from '../actions';
+import { LOAD_TWEETS, NEW_TWEET, TOGGLE_STREAM } from '../actions';
 
 const initialState = {
   stream: false,
-  tweets: [] 
+  new_tweets: [],
+  loaded_tweets: [] 
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_TWEET:
+    case LOAD_TWEETS:
       return {
         ...state,
-        data: [...state.tweets, action.tweet]
+        loaded_tweets: [
+          ...state.new_tweets,
+          ...state.loaded_tweets
+        ].slice(0,100), //max store 100 tweets
+        new_tweets: []
       }
-      
+    
+    case NEW_TWEET:
+      return {
+        ...state,
+        new_tweets: [ 
+          JSON.parse(action.tweet),
+          ...state.new_tweets
+        ].slice(0,100)
+      }
+
     case TOGGLE_STREAM: 
       return {
         ...state,
