@@ -20,26 +20,8 @@ class Page extends Component {
 
 		dispatch(toggleStreamSocket(ws))
 
-		//rate limiting
-		let last_check = Date.now(),
-			rate = 4,
-			per = 1,
-			allowence = rate
-
 		ws.on('new-stream-data', (res) => {
-			const current = Date.now(),
-				time_passed = current - last_check
-			
-			last_check = current
-			allowence += time_passed * (rate / per)		
-			
-			if(allowence > rate) allowence = rate
-
-			if(allowence != 0){
-				dispatch(newTweet(res))
-				allowence--
-			}
-
+			dispatch(newTweet(res))
 		});
 	}
 
