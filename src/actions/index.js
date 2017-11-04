@@ -1,7 +1,6 @@
-//import { browserHistory } from 'react-router';
-
 export const NEW_TWEET = 'NEW_TWEET';
 export const TOGGLE_STREAM = 'TOGGLE_STREAM';
+
 
 export const newTweet = (tweet) => {
 	return {

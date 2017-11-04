@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { toggleStreamSocket, loadTweetsAsync, newTweet } from '../actions'
+import { toggleStreamSocket, newTweet } from '../actions'
 import io from 'socket.io-client'
-import Tweet from 'react-tweet'
+import Tweet from './Tweet/Tweet'
+import { Card } from 'material-ui/Card'
 
 let ws;
 
 const mapStateToProps = (state = {}) => {
-	return { ...state};
+	return { ...state.twitter };
 };
 
-class Menu extends Component {
+class Page extends Component {
 	constructor(props) {
 		super(props)
 		const { dispatch } = this.props
@@ -19,45 +20,47 @@ class Menu extends Component {
 
 		dispatch(toggleStreamSocket(ws))
 
+		//rate limiting
+		let last_check = Date.now(),
+			rate = 4,
+			per = 1,
+			allowence = rate
+
 		ws.on('new-stream-data', (res) => {
-			dispatch(newTweet(res))
-		});
+			const current = Date.now(),
+				time_passed = current - last_check
+			
+			last_check = current
+			allowence += time_passed * (rate / per)		
+			
+			if(allowence > rate) allowence = rate
 
-		ws.on('wrong-format', (res) => {
-			console.dir(res)
-		});
+			if(allowence != 0){
+				dispatch(newTweet(res))
+				allowence--
+			}
 
-		console.log(this.state)
-	}
-
-	componentDidMount() {
-	  let timer = setInterval(() => {
-      this.props.dispatch(loadTweetsAsync())
-		}, 3000);
-		
-		this.setState({
-			timer: timer
 		});
 	}
 
 	componentWillUnmount() {
-		this.clearInterval(this.state.timer);
+		ws.disconnect()
 	}
 
-	render() {
-		const { loaded_tweets, dispatch } = this.props
 
-		return (
-			<div>
-				<Tweet data={loaded_tweets[0]} />
+render() {
+	const { new_tweets } = this.props
 
-				
-				<button onClick={() => { dispatch(toggleStreamSocket(ws)) }}>
-					test
-			</button>
-			</div>
-		)
-	}
+	return (
+		<ol style={{ width: "588px", listStyle: "none", listStylePosition: "inside", margin: "auto" }}>
+			{new_tweets.map((tweet, index) =>
+				<li key={tweet.id}>
+					<Tweet data={tweet} />
+				</li>
+			)}
+		</ol>
+	)
+}
 }
 
-export default connect(mapStateToProps)(Menu)
+export default connect(mapStateToProps)(Page)

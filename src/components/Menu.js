@@ -32,7 +32,7 @@ class Menu extends Component {
 
 	render(){
 		return(
-			<Drawer docked={true} open={true} type="permanent" width={300}>
+			<Drawer docked={true} open={true} type="permanent" width={400}>
 				<AppBar showMenuIconButton={false} title="Filter" />
 				<TextField 
 					hintText="Search"

@@ -60,13 +60,11 @@ io.on('connection', (ws) => {
 			if (ws.stream !== undefined) ws.stream.stop()
 
 			let filter = (parsed.filter === undefined)? 'message': parsed.filter
-			console.log("start-stream2")
 			//create new stream
 			ws.stream = twitter.stream('statuses/filter', { track: parsed.track })
 			ws.stream.on(filter, (tweet) => {
 				//if client is ready for data send
 				if (ws.connected === true)
-				console.log("asd")
 					ws.emit('new-stream-data', tweet)
 			})
 		}
@@ -79,9 +77,14 @@ io.on('connection', (ws) => {
 	})
 
 	ws.on('disconnected', () => {
+		console.log("stop-stream")
 		//if stream is up, close it
 		if (ws.stream !== undefined) ws.stream.stop()
 	});
+
+	ws.on('connect_failed', function() {
+		console.log("Sorry, there seems to be an issue with the connection!");
+ })
 });
 
 http.listen(9000, () => {
