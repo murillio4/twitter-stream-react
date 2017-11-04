@@ -7,22 +7,10 @@ import { ConnectedRouter } from 'react-router-redux'
 
 import 'normalize.css';
 
-import Menu from './components/Menu';
-import Page from './components/Page';
+import AppContainer from './components/AppContainer'
+
 
 import { store, history } from './store';
-
-const AppContainer = () => (
-  <MuiThemeProvider>
-    <div>
-      <Menu/>
-      <div style={{paddingLeft: "400px"}}>
-        <AppBar showMenuIconButton={false} />
-        <Page />
-      </div>
-    </div>
-  </MuiThemeProvider>
-);
 
 const App = () => (
 	<Provider store={store}>

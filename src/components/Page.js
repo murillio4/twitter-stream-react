@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { toggleStreamSocket, newTweet } from '../actions'
-import io from 'socket.io-client'
+import { toggleStreamSocket, newTweet, readySocket } from '../actions'
 import Tweet from './Tweet/Tweet'
 import { Card } from 'material-ui/Card'
-
-let ws;
 
 const mapStateToProps = (state = {}) => {
 	return { ...state.twitter };
@@ -14,11 +11,9 @@ const mapStateToProps = (state = {}) => {
 class Page extends Component {
 	constructor(props) {
 		super(props)
-		const { dispatch } = this.props
+		const { dispatch, ws } = this.props
 
-		ws = io.connect('http://localhost:9000')
-
-		dispatch(toggleStreamSocket(ws))
+		//dispatch(toggleStreamSocket(ws))
 
 		ws.on('new-stream-data', (res) => {
 			dispatch(newTweet(res))
@@ -26,11 +21,11 @@ class Page extends Component {
 	}
 
 	componentWillUnmount() {
-		ws.disconnect()
+		this.props.ws.disconnect()
 	}
 
 	componentDidUpdate() {
-		dispatch(readySocket(ws))
+		this.props.dispatch(readySocket(this.props.ws))
 	}
 
 	render() {

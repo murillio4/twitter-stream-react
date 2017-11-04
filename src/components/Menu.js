@@ -1,12 +1,19 @@
-import React, {Component} from 'react';
-import {TextField, Drawer, AppBar, Divider} from 'material-ui';
+import React, {Component} from 'react'
+import { connect } from 'react-redux'
+import { toggleStreamSocket } from '../actions'
+import {SelectField, MenuItem, Drawer, AppBar, Divider} from 'material-ui'
 import ChipInput from 'material-ui-chip-input'
+
+const mapStateToProps = (state = {}) => {
+	return { ...state.twitter };
+};
 
 class Menu extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      chips: []
+			filter: 1,
+			chips: []
     }
   }
 
@@ -30,24 +37,38 @@ class Menu extends Component {
 		if(this.props.onPaste) this.props.onPaste(event);
 	}
 
+	handleFilterChange = (event, index, value) => this.setState({filter: value});
+
 	render(){
+		const { stream, dispatch } = this.props
 		return(
-			<Drawer docked={true} open={true} type="permanent" width={400}>
+			<Drawer docked={true} open={true} type="permanent" width={290}>
 				<AppBar showMenuIconButton={false} title="Filter" />
-				<TextField 
-					hintText="Search"
+				<MenuItem 
+					style={{paddingTop:"9px", paddingBottom:"9px"}}
+					onClick={() => dispatch(toggleStreamSocket(this.props.ws))}
+				>
+					{stream?"Stop":"Start"} stream
+				</MenuItem>
+				<Divider />
+				<SelectField
+          value={this.state.filter}
+					onChange={this.handleFilterChange}
 					underlineShow={false}
-					style={{paddingLeft:"15px"}}
-					/>
+					style={{paddingLeft:"15px", paddingTop:"7px"}}
+        >
+          <MenuItem value={1} primaryText="Statuses" />
+          <MenuItem value={2} primaryText="Site" />
+        </SelectField>
 				<Divider />
 				<ChipInput
-					hintText="Insert Trackers"
+					hintText="Type in a tracker and press enter"
 					value={this.state.chips}
 					onPaste={(event) => this.handlePaste(event)}
 					onRequestAdd={(chip) => this.handleRequestAdd(chip)}
 					onRequestDelete={(deletedChip) => this.handleRequestDelete(deletedChip)}
 					underlineShow={false}
-					style={{paddingLeft:"15px"}}
+					style={{paddingLeft:"15px", paddingTop:"7px"}}
 				/>
 				<Divider />
 			</Drawer>
@@ -55,17 +76,4 @@ class Menu extends Component {
 	}
 }
 
-/*<SelectField 
-                    floatingLabelText="Sort By"
-                    value={this.state.value}
-                    onChange={this.handleChange}
-                    style={{marginLeft: 15}}
-                    underlineShow={false} >
-                    <MenuItem value={1} primaryText="Never" />
-                    <MenuItem value={2} primaryText="Every Night" />
-                    <MenuItem value={3} primaryText="Weeknights" />
-                    <MenuItem value={4} primaryText="Weekends" />
-                    <MenuItem value={5} primaryText="Weekly" />
-                </SelectField>*/
-
-export default Menu;
+export default connect(mapStateToProps)(Menu)

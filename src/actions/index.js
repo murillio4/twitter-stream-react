@@ -23,7 +23,7 @@ export const toggleStreamSocket = (ws) => {
 		if (!getState().twitter.stream)
 			ws.emit('stop-stream')
 		else
-			ws.emit('start-stream', JSON.stringify({ track: ["donald trump"], filter:"tweet"}))
+			ws.emit('start-stream', JSON.stringify({ track: ["video"], filter:"tweet"}))
 	}
 }
 

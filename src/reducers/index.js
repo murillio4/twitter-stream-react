@@ -3,7 +3,7 @@ import { NEW_TWEET, TOGGLE_STREAM } from '../actions';
 const initialState = {
   stream: false,
   new_tweets: [],
-  loaded_tweets: [] 
+  loaded_tweets: []
 }
 
 const reducer = (state = initialState, action) => {
@@ -13,7 +13,7 @@ const reducer = (state = initialState, action) => {
         return tweet.id === action.tweet.id
       });
 
-      if(isIn === undefined){
+      if(isIn === undefined && state.stream){
         return {
           ...state,
           new_tweets: [ 

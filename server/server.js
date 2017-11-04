@@ -73,9 +73,9 @@ io.on('connection', (ws) => {
 		}
 	})
 
-	ws.on('ready-stream'), () => {
+	ws.on('ready-stream', () => {
 		ws.ready = true
-	}
+	})
 
 	ws.on('stop-stream', () => {
 		console.log("stop-stream")
