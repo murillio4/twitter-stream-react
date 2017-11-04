@@ -29,20 +29,23 @@ class Page extends Component {
 		ws.disconnect()
 	}
 
+	componentDidUpdate() {
+		dispatch(readySocket(ws))
+	}
 
-render() {
-	const { new_tweets } = this.props
+	render() {
+		const { new_tweets } = this.props
 
-	return (
-		<ol style={{ width: "588px", listStyle: "none", listStylePosition: "inside", margin: "auto" }}>
-			{new_tweets.map((tweet, index) =>
-				<li key={tweet.id}>
-					<Tweet data={tweet} />
-				</li>
-			)}
-		</ol>
-	)
-}
+		return (
+			<ol style={{ width: "588px", listStyle: "none", listStylePosition: "inside", margin: "auto" }}>
+				{new_tweets.map((tweet, index) =>
+					<li key={tweet.id}>
+						<Tweet data={tweet} />
+					</li>
+				)}
+			</ol>
+		)
+	}
 }
 
 export default connect(mapStateToProps)(Page)
