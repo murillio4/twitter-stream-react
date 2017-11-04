@@ -47,7 +47,8 @@ const check_validate_json = data => {
 
 
 io.on('connection', (ws) => {
-	console.log("New connection");
+	//set ready to false
+	ws.ready = true
 
 	ws.on('start-stream', (data) => {
 		let parsed = check_validate_json(data)
@@ -64,11 +65,17 @@ io.on('connection', (ws) => {
 			ws.stream = twitter.stream('statuses/filter', { track: parsed.track })
 			ws.stream.on(filter, (tweet) => {
 				//if client is ready for data send
-				if (ws.connected === true)
+				if (ws.connected === true && ws.ready === true) {
 					ws.emit('new-stream-data', tweet)
+					ws.ready = false
+				}
 			})
 		}
 	})
+
+	ws.on('ready-stream'), () => {
+		ws.ready = true
+	}
 
 	ws.on('stop-stream', () => {
 		console.log("stop-stream")
@@ -76,8 +83,8 @@ io.on('connection', (ws) => {
 		if (ws.stream !== undefined) ws.stream.stop()
 	})
 
-	ws.on('disconnected', () => {
-		console.log("stop-stream")
+	ws.on('disconnect', () => {
+		console.log("disonnect-stream")
 		//if stream is up, close it
 		if (ws.stream !== undefined) ws.stream.stop()
 	});
