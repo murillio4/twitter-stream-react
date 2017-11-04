@@ -1,7 +1,16 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import reducers from '../reducers'
 import thunk from 'redux-thunk'
+import { routerReducer, routerMiddleware } from 'react-router-redux'
+import createHistory from 'history/createBrowserHistory'
 
-const store = createStore(reducers, applyMiddleware(thunk));
+const rootReducer =  combineReducers({
+    twitter: reducers,
+    routing: routerReducer
+  })
 
-export default store;
+export const history = createHistory()
+  
+const middleware = routerMiddleware(history)
+
+export const store = createStore(rootReducer, applyMiddleware(thunk, middleware));
