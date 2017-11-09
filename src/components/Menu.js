@@ -29,43 +29,29 @@ class Menu extends Component {
 	}
 
   handleRequestAdd = (...new_trackers) => {
-		let { dispatch, trackers, stream_filter, language } = this.props
+		let { dispatch, trackers, language } = this.props
 		let updated_trackers = [...trackers, ...new_trackers]
 
-		dispatch(updateFilterAsync(updated_trackers, language, stream_filter))
+		dispatch(updateFilterAsync(updated_trackers, language))
   }
 
   handleRequestDelete = (deletedChip) => {
-		let { dispatch, trackers, stream_filter, language } = this.props
+		let { dispatch, trackers, language } = this.props
     let updated_trackers = trackers.filter((c) => c !== deletedChip)
 		
-		dispatch(updateFilterAsync(updated_trackers, language, stream_filter))
+		dispatch(updateFilterAsync(updated_trackers, language))
 	}
 	
-	/*handlePaste = (event) => {
-		const clipboardText = event.clipboardData.getData('Text');
-		event.preventDefault();
-		this.handleRequestAdd(...clipboardText.split('\n').filter((t) => t.length > 0));
-
-		if(this.props.onPaste) this.props.onPaste(event);
-	}*/
-
-	handleFilterChange = (event, index, value) => {
-		let { dispatch, trackers, language } = this.props
-
-		dispatch(updateFilterAsync(trackers, language, value))
-	}
-
 	handleLanguageChange = (event, index, value) => {
-		let { dispatch, trackers, stream_filter} = this.props
+		let { dispatch, trackers} = this.props
 
-		dispatch(updateFilterAsync(trackers, value, stream_filter))
+		dispatch(updateFilterAsync(trackers, value))
 	}
 
 	shouldComponentUpdate = (nextProps, nextState) => {
-		let { trackers, stream_filter, language, stream } = this.props
+		let { trackers, language, stream } = this.props
 		
-		if(trackers !== nextProps.trackers || stream_filter != nextProps.stream_filter || language != nextProps.language || stream !== nextProps.stream)
+		if(trackers !== nextProps.trackers || language != nextProps.language || stream !== nextProps.stream)
 			return true
 		
 		if(this.state.errorColor !== nextState.errorColor)
@@ -85,16 +71,6 @@ class Menu extends Component {
 				>
 					{stream?"Stop":"Start"} stream
 				</MenuItem>
-				<Divider />
-				<SelectField
-          value={stream_filter}
-					onChange={this.handleFilterChange}
-					underlineShow={false}
-					style={{paddingLeft:"15px", paddingTop:"7px"}}
-        >
-          <MenuItem value={"statuses/filter"} primaryText="Statuses" />
-          <MenuItem value={"site"} primaryText="Site" />
-        </SelectField>
 				<Divider />
 				<SelectField
 					value={language}

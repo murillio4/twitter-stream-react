@@ -3,7 +3,6 @@ import { UPDATE_FILTER, TOGGLE_STREAM } from '../actions';
 const initialState = {
 	stream: false,
 	language: '',
-	stream_filter: 'statuses/filter',
 	trackers: []
 }
 
@@ -13,8 +12,7 @@ const filter = (state = initialState, action) => {
 			return {
 				...state,
 				trackers: action.trackers,
-				language: action.language,
-				stream_filter: action.stream_filter
+				language: action.language
 			}
 
 		case TOGGLE_STREAM:

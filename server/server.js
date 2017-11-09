@@ -60,9 +60,9 @@ io.on('connection', (ws) => {
 			//if an old stream is up (maybe not needed)
 			if (ws.stream !== undefined) ws.stream.stop()
 
-			let filter = (parsed.filter === undefined)? 'statuses/filter': parsed.filter
+			let lang = (parsed.lang === undefined)? '': parsed.lang
 			//create new stream
-			ws.stream = twitter.stream(filter, { track: parsed.track, language: parsed.lang})
+			ws.stream = twitter.stream('statuses/filter', { track: parsed.track, language: lang})
 			ws.stream.on("tweet", (tweet) => {
 				console.log(tweet)
 				//if client is ready for data send
