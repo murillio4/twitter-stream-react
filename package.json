@@ -34,6 +34,8 @@
     "video.js": "^6.2.8"
   },
   "scripts": {
+    "start-client": "react-scripts start",
+    "start-server": "node ./server/server.js",
     "start": "concurrently --kill-others \"react-scripts start\" \"node ./server/server.js\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

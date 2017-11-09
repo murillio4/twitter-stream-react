@@ -9,3 +9,8 @@ The website could be more mobile friendly, so this is something that could be wo
 
 # Overall thoughts
 Great task that proved to be more demanding than I thought. Time consumed; about 2-2,5 full workdays (this could be reduced dramatically if I had more experience with react)
+
+# How to run the application
+1. yarn or npm to install all dependign packages
+2. run "start" script to run both server and client
+3. opt. if you want to build the react app this can be done with "build" script and server can be ran alone with "start-server"
