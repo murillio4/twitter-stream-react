@@ -14,13 +14,9 @@ class Page extends Component {
 		const { dispatch, ws } = this.props
 
 		ws.on('new-stream-data', res => {
-			console.dir(res)
 			dispatch(newTweet(res))
+			dispatch(readySocket())
 		});
-	}
-
-	componentDidUpdate() {
-		this.props.dispatch(readySocket(this.props.ws))
 	}
 
 	render() {

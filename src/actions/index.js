@@ -18,10 +18,11 @@ export const toggleStream = () => {
 	}
 }
 
-export const updateFilter = (trackers, stream_filter) => {
+export const updateFilter = (trackers, language, stream_filter) => {
 	return {
 		type: UPDATE_FILTER,
 		trackers,
+		language,
 		stream_filter
 	}
 }
@@ -37,28 +38,32 @@ export const initWebsocket = ws => {
 export const toggleStreamSocket = () => {
 	return (dispatch, getState) => {
 		let { ws } = getState().tweet
-		let { trackers, stream_filter, stream } = getState().filter
+		let { trackers, stream_filter, language, stream } = getState().filter
 
 		dispatch(toggleStream())
 
-		if (stream)
+		if (stream){
 			ws.emit('stop-stream')
-		else
-			ws.emit('start-stream', JSON.stringify({ track: trackers, filter: stream_filter }))
+		} else {
+			ws.emit('start-stream', JSON.stringify({ track: trackers, lang: language, filter: stream_filter }))
+			dispatch(readySocket())
+		}	
 	}
 }
 
-export const updateFilterAsync = (trackers, stream_filter) => {
+export const updateFilterAsync = (trackers, language, stream_filter) => {
 	return (dispatch, getState) => {
 		let { stream } = getState().filter
 		let { ws } = getState().tweet
 
-		dispatch(updateFilter(trackers, stream_filter))
+		dispatch(updateFilter(trackers, language, stream_filter))
 
-		if (stream && trackers.length == 0)
+		if (stream && trackers.length == 0){
 			dispatch(toggleStreamSocket())
-		else if (stream)
-			ws.emit('start-stream', JSON.stringify({ track: trackers, filter: stream_filter }))
+		} else if (stream) {
+			ws.emit('start-stream', JSON.stringify({ track: trackers, lang: language, filter: stream_filter }))
+			dispatch(readySocket())
+		}	
 	}
 }
 

@@ -10,7 +10,7 @@ let v = new Validator(),
 		consumer_secret: 'GPL2xWJxVbT5S3dBembZjQpvO6L5Bbt9ip5bjsy6PLLo3dB8p6',
 		access_token: '404267567-BTqZo9oCaasiwYDnSRKE4dD3tDTcpd2PB3wAg5dF',
 		access_token_secret: '6sx1JrvIg8qWr89zCNCoqeT5OarI04bWVwMRmRZx5VaQk',
-		timeout_ms: 60 * 1000,
+		timeout_ms: 60 * 100,
 	});
 
 const	baseSchema = {
@@ -60,13 +60,15 @@ io.on('connection', (ws) => {
 			//if an old stream is up (maybe not needed)
 			if (ws.stream !== undefined) ws.stream.stop()
 
-			let filter = (parsed.filter === undefined)? 'message': parsed.filter
+			let filter = (parsed.filter === undefined)? 'statuses/filter': parsed.filter
 			//create new stream
-			ws.stream = twitter.stream('statuses/filter', { track: parsed.track })
-			ws.stream.on(filter, (tweet) => {
+			ws.stream = twitter.stream(filter, { track: parsed.track, language: parsed.lang})
+			ws.stream.on("tweet", (tweet) => {
+				console.log(tweet)
 				//if client is ready for data send
 				if (ws.connected === true && ws.ready === true) {
 					ws.emit('new-stream-data', tweet)
+					
 					ws.ready = false
 				}
 			})
