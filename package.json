@@ -10,6 +10,7 @@
     "http": "^0.0.0",
     "isomorphic-fetch": "^2.2.1",
     "jsonschema": "^1.2.0",
+    "langs": "^2.0.0",
     "material-ui": "^0.19.4",
     "material-ui-chip-input": "^0.18.2",
     "normalize.css": "^7.0.0",
