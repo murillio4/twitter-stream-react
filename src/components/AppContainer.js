@@ -1,36 +1,43 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import io from 'socket.io-client'
 import { MuiThemeProvider, AppBar } from 'material-ui'
+import { initWebsocket } from '../actions'
 
 import Menu from './Menu';
 import Page from './Page';
 
-let ws;
+const mapStateToProps = (state = {}) => {
+	return { ...state.tweet.ws };
+};
 
 class AppContainer extends Component {
 	constructor(props) {
 		super(props)
+		let { dispatch } = this.props
 
-		ws = io.connect('http://localhost:9000')
+		let ws = io.connect('http://localhost:9000')
+		dispatch(initWebsocket(ws))
 	}
 
 	componentWillUnmount() {
-		ws.disconnect()
+		if (this.props.ws !== null)
+			this.props.ws.disconnect()
 	}
 
 	render() {
 		return (
-            <MuiThemeProvider>
-            <div>
-              <Menu ws={ws}/>
-              <div style={{paddingLeft: "290px"}}>
-                <AppBar showMenuIconButton={false} />
-                <Page ws={ws}/>
-              </div>
-            </div>
-          </MuiThemeProvider>
+			<MuiThemeProvider>
+				<div>
+					<Menu />
+					<div style={{ paddingLeft: "290px" }}>
+						<AppBar showMenuIconButton={false} />
+						<Page />
+					</div>
+				</div>
+			</MuiThemeProvider>
 		)
 	}
 }
 
-export default AppContainer
+export default connect(mapStateToProps)(AppContainer)

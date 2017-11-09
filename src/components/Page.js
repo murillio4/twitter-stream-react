@@ -5,7 +5,7 @@ import Tweet from './Tweet/Tweet'
 import { Card } from 'material-ui/Card'
 
 const mapStateToProps = (state = {}) => {
-	return { ...state.twitter };
+	return { ...state.tweet };
 };
 
 class Page extends Component {
@@ -13,15 +13,10 @@ class Page extends Component {
 		super(props)
 		const { dispatch, ws } = this.props
 
-		//dispatch(toggleStreamSocket(ws))
-
-		ws.on('new-stream-data', (res) => {
+		ws.on('new-stream-data', res => {
+			console.dir(res)
 			dispatch(newTweet(res))
 		});
-	}
-
-	componentWillUnmount() {
-		this.props.ws.disconnect()
 	}
 
 	componentDidUpdate() {

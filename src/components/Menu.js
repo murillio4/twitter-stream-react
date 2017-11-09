@@ -1,74 +1,102 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { toggleStreamSocket } from '../actions'
-import {SelectField, MenuItem, Drawer, AppBar, Divider} from 'material-ui'
+import languages from 'langs'
+import { toggleStreamSocket, updateFilterAsync } from '../actions'
+import { SelectField, MenuItem, Drawer, AppBar, Divider } from 'material-ui'
 import ChipInput from 'material-ui-chip-input'
+import { red500 } from 'material-ui/styles/colors'
+
 
 const mapStateToProps = (state = {}) => {
-	return { ...state.twitter };
+	return {
+		...state.filter,
+		ws: state.tweet.ws
+	};
 };
 
 class Menu extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-			filter: 1,
-			chips: []
-    }
-  }
-
-  handleRequestAdd(...chips) {
-    this.setState({
-      chips: [...this.state.chips, ...chips]
-    });
-  }
-
-  handleRequestDelete(deletedChip) {
-    this.setState({
-      chips: this.state.chips.filter((c) => c !== deletedChip)
-    });
+	state = {
+		errorColor: {}
 	}
-	
-	handlePaste(event) {
+
+	toggleStream = () => {
+		let { dispatch, trackers, stream } = this.props
+
+		if (trackers.length === 0 && !stream) {
+			this.setState({ errorColor: { color: red500 } })
+		} else {
+			dispatch(toggleStreamSocket())
+			this.setState({ errorColor: {} })
+		}
+	}
+
+	handleRequestAdd = (...new_trackers) => {
+		let { dispatch, trackers, stream_filter } = this.props
+		let updated_trackers = [...trackers, ...new_trackers]
+
+		dispatch(updateFilterAsync(updated_trackers, stream_filter))
+	}
+
+	handleRequestDelete = (deletedChip) => {
+		let { dispatch, trackers, stream_filter } = this.props
+		let updated_trackers = trackers.filter((c) => c !== deletedChip)
+
+		dispatch(updateFilterAsync(updated_trackers, stream_filter))
+	}
+
+	/*handlePaste = (event) => {
 		const clipboardText = event.clipboardData.getData('Text');
 		event.preventDefault();
 		this.handleRequestAdd(...clipboardText.split('\n').filter((t) => t.length > 0));
 
 		if(this.props.onPaste) this.props.onPaste(event);
+	}*/
+
+	handleFilterChange = (event, index, value) => {
+		let { dispatch, trackers } = this.props
+
+		dispatch(updateFilterAsync(trackers, value))
 	}
 
-	handleFilterChange = (event, index, value) => this.setState({filter: value});
+	shouldComponentUpdate = (nextProps, nextState) => {
+		let { trackers, stream_filter, stream } = this.props
 
-	render(){
-		const { stream, dispatch } = this.props
-		return(
+		if (trackers !== nextProps.trackers || stream_filter != nextProps.stream_filter || stream !== nextProps.stream)
+			return true
+
+		return false
+	}
+
+	render() {
+		const { stream, trackers, stream_filter } = this.props
+		return (
 			<Drawer docked={true} open={true} type="permanent" width={290}>
 				<AppBar showMenuIconButton={false} title="Filter" />
-				<MenuItem 
-					style={{paddingTop:"9px", paddingBottom:"9px"}}
-					onClick={() => dispatch(toggleStreamSocket(this.props.ws))}
+				<MenuItem
+					style={{ paddingTop: "9px", paddingBottom: "9px" }}
+					onClick={this.toggleStream}
 				>
-					{stream?"Stop":"Start"} stream
+					{stream ? "Stop" : "Start"} stream
 				</MenuItem>
 				<Divider />
 				<SelectField
-          value={this.state.filter}
+					value={stream_filter}
 					onChange={this.handleFilterChange}
 					underlineShow={false}
-					style={{paddingLeft:"15px", paddingTop:"7px"}}
-        >
-          <MenuItem value={1} primaryText="Statuses" />
-          <MenuItem value={2} primaryText="Site" />
-        </SelectField>
+					style={{ paddingLeft: "15px", paddingTop: "7px" }}
+				>
+					<MenuItem value={"statuses/filter"} primaryText="Statuses" />
+					<MenuItem value={"site"} primaryText="Site" />
+				</SelectField>
 				<Divider />
 				<ChipInput
 					hintText="Type in a tracker and press enter"
-					value={this.state.chips}
-					onPaste={(event) => this.handlePaste(event)}
+					value={trackers}
 					onRequestAdd={(chip) => this.handleRequestAdd(chip)}
 					onRequestDelete={(deletedChip) => this.handleRequestDelete(deletedChip)}
 					underlineShow={false}
-					style={{paddingLeft:"15px", paddingTop:"7px"}}
+					hintStyle={this.state.errorColor}
+					style={{ paddingLeft: "15px", paddingTop: "7px" }}
 				/>
 				<Divider />
 			</Drawer>
