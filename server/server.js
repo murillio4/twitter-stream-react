@@ -64,7 +64,6 @@ io.on('connection', (ws) => {
 			//create new stream
 			ws.stream = twitter.stream('statuses/filter', { track: parsed.track, language: lang})
 			ws.stream.on("tweet", (tweet) => {
-				console.log(tweet)
 				//if client is ready for data send
 				if (ws.connected === true && ws.ready === true) {
 					ws.emit('new-stream-data', tweet)
