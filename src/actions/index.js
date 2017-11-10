@@ -57,7 +57,7 @@ export const updateFilterAsync = (trackers, language) => {
 
 		dispatch(updateFilter(trackers, language))
 
-		if (stream && trackers.length == 0){
+		if (stream && trackers.length === 0){
 			dispatch(toggleStreamSocket())
 		} else if (stream) {
 			ws.emit('start-stream', JSON.stringify({ track: trackers, lang: language }))
