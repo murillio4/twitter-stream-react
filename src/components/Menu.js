@@ -51,7 +51,7 @@ class Menu extends Component {
 	shouldComponentUpdate = (nextProps, nextState) => {
 		let { trackers, language, stream } = this.props
 		
-		if(trackers !== nextProps.trackers || language != nextProps.language || stream !== nextProps.stream)
+		if(trackers !== nextProps.trackers || language !== nextProps.language || stream !== nextProps.stream)
 			return true
 		
 		if(this.state.errorColor !== nextState.errorColor)
@@ -61,7 +61,7 @@ class Menu extends Component {
 	}
 
 	render(){
-		const { stream, trackers, stream_filter, language } = this.props
+		const { stream, trackers, language } = this.props
 		return(
 			<Drawer docked={true} open={true} type="permanent" width={290}>
 				<AppBar showMenuIconButton={false} title="Filter" />

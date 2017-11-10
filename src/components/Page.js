@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { toggleStreamSocket, newTweet, readySocket } from '../actions'
+import { newTweet, readySocket } from '../actions'
 import Tweet from './Tweet/Tweet'
-import { Card } from 'material-ui/Card'
 
 const mapStateToProps = (state = {}) => {
 	return { ...state.tweet };

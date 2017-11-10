@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { AppBar, MuiThemeProvider } from 'material-ui';
 import { Route } from 'react-router'
 import { ConnectedRouter } from 'react-router-redux'
 
