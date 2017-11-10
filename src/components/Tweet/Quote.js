@@ -9,7 +9,7 @@ class Quote extends React.Component {
 
     return (
       <div className="QuoteTweet" style={styles.QuoteTweet}>
-        <a className="QuoteTweet-link" style={styles.QuoteLink} href={`https://twitter.com/${data.user.screen_name}/status/${data.id_str}`} {...linkProps} />
+        <a className="QuoteTweet-link" aria-hidden={true} style={styles.QuoteLink} href={`https://twitter.com/${data.user.screen_name}/status/${data.id_str}`} {...linkProps} >.</a>
         <div className="QuoteTweet-innerContainer" style={styles.QuoteTweetInner}>
           <div className="QuoteTweet-originalAuthor" style={styles.QuoteTweetAuthor}>
             <b>{data.user.name}</b>

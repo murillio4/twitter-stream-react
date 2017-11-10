@@ -1,7 +1,6 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import styles from './styles'
-import twemoji from 'twemoji'
+//import twemoji from 'twemoji'
 
 class Header extends React.Component {
   constructor(props) {
@@ -45,20 +44,20 @@ class Header extends React.Component {
         name: "",
         screen_name: "TwitterDev",
         location: "Internet",
-        url: "https:\/\/dev.twitter.com\/",
+        url: "https://dev.twitter.com/",
         description: ""
       }
     }
 
-    let name = data.user.name
+    /*let { name } = data.user
     
     name = twemoji.parse(name)
-    name = name.replace(/<img class="emoji"/g, '<img class="emoji" style="height:14px;margin-right:5px;"')
+    name = name.replace(/<img class="emoji"/g, '<img class="emoji" style="height:14px;margin-right:5px;"')*/
 
     return (
       <div className="header">
         <a className="account-group" style={styles.accountGroup} href={`http://twitter.com/${data.user.screen_name}`} {...linkProps}>
-          <img className="avatar" src={data.user.profile_image_url} style={styles.avatar} />
+          <img className="avatar" src={data.user.profile_image_url} style={styles.avatar} alt="Profile Avatar" />
           <strong className="fullname" style={styles.fullname}>{data.user.name}{' '}</strong>
           <span>&rlm;</span>
           <span className="username" style={styles.username}>

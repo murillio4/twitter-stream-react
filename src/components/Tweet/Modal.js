@@ -16,7 +16,7 @@ class Modal extends React.Component {
   render () {
     if (typeof window === "undefined") return null
 
-    let {data, modalIndex} = this.props, isRT = false
+    let {data, modalIndex} = this.props
     //let MediaComponent = null
 
     // use retweet as data if its a RT
