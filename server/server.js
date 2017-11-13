@@ -29,6 +29,11 @@ const	baseSchema = {
 	};
 
 
+/**
+ * Checks and validates data recieved from client according to baseSchema
+ * 
+ * @param {Object} data 
+ */
 const check_validate_json = data => {
 	let parsed;
 	//parse incoming data to json, if not json send error
@@ -45,11 +50,16 @@ const check_validate_json = data => {
 	return parsed;
 }
 
-
+/**
+ * On new connection 
+ */
 io.on('connection', (ws) => {
 	//set ready to false
 	ws.ready = true
 
+	/**
+	 * Client asks for a new stream
+	 */
 	ws.on('start-stream', (data) => {
 		let parsed = check_validate_json(data)
 		//if track is not defined send error
@@ -74,16 +84,25 @@ io.on('connection', (ws) => {
 		}
 	})
 
+	/**
+	 * Client informs about ready to recieve data
+	 */
 	ws.on('ready-stream', () => {
 		ws.ready = true
 	})
 
+	/**
+	 * Client stop data stream
+	 */
 	ws.on('stop-stream', () => {
 		console.log("stop-stream")
 		//if stream is up, close it
 		if (ws.stream !== undefined) ws.stream.stop()
 	})
 
+	/**
+	 * Client disconnected 
+	 */
 	ws.on('disconnect', () => {
 		console.log("disonnect-stream")
 		//if stream is up, close it
