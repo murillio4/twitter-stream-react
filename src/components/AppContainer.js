@@ -11,6 +11,9 @@ const mapStateToProps = (state = {}) => {
 	return { ...state.tweet.ws };
 };
 
+/**
+ * Wrapper for whole client with websocket setup
+ */
 class AppContainer extends Component {
 	constructor(props) {
 		super(props)

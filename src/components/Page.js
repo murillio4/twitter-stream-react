@@ -7,6 +7,10 @@ const mapStateToProps = (state = {}) => {
 	return { ...state.tweet };
 };
 
+
+/**
+ * Renders main content(Tweets) and controls new data from tweets 
+ */
 class Page extends Component {
 	constructor(props) {
 		super(props)

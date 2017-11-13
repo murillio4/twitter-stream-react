@@ -12,6 +12,9 @@ const mapStateToProps = (state = {}) => {
 					 ws: state.tweet.ws };
 };
 
+/**
+ * Renders application menu and its actions
+ */
 class Menu extends Component {
 	state = {
 		errorColor: {}
