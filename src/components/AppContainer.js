@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import io from 'socket.io-client'
 import { MuiThemeProvider, AppBar } from 'material-ui'
-import { initWebsocket } from '../actions'
+import { initWebsocket, newTweetSocket } from '../actions'
 
 import Menu from './Menu';
 import Page from './Page';
@@ -21,6 +21,10 @@ class AppContainer extends Component {
 
 		let ws = io.connect('http://localhost:9000')
 		dispatch(initWebsocket(ws))
+
+		ws.on('new-stream-data', tweet => {
+			dispatch(newTweetSocket(tweet))
+		});
 	}
 
 	componentWillUnmount() {

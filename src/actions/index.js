@@ -64,7 +64,7 @@ export const toggleStreamSocket = () => {
 			ws.emit('stop-stream')
 		} else {
 			ws.emit('start-stream', JSON.stringify({ track: trackers, lang: language }))
-			dispatch(readySocket())
+			ws.emit('ready-stream')
 		}	
 	}
 }
@@ -87,7 +87,7 @@ export const updateFilterAsync = (trackers, language) => {
 			dispatch(toggleStreamSocket())
 		} else if (stream) {
 			ws.emit('start-stream', JSON.stringify({ track: trackers, lang: language }))
-			dispatch(readySocket())
+			ws.emit('ready-stream')
 		}	
 	}
 }
@@ -95,8 +95,11 @@ export const updateFilterAsync = (trackers, language) => {
 /**
  * Thunk async action that informs the server that the clien is ready for data
  */
-export const readySocket = () => {
+export const newTweetSocket = tweet => {
 	return (dispatch, getState) => {
-		getState().tweet.ws.emit('ready-stream')
+		let { ws } = getState().tweet
+
+		dispatch(newTweet(tweet))
+		ws.emit('ready-stream')
 	}
 }

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { newTweet, readySocket } from '../actions'
 import Tweet from './Tweet/Tweet'
 
 const mapStateToProps = (state = {}) => {
@@ -9,17 +8,39 @@ const mapStateToProps = (state = {}) => {
 
 
 /**
- * Renders main content(Tweets) and controls new data from tweets 
+ * Renders main content(Tweets)
  */
 class Page extends Component {
-	constructor(props) {
-		super(props)
-		const { dispatch, ws } = this.props
+	state = {
+		timer: null,
+		shouldUpdate: true
+	}
+	
+	componentDidMount = () => {
+    let timer = setInterval(this.chunkUpdate, 2000)
+    this.setState({timer})
+	}
+	
+	componentWillUnmount = () => {
+    this.clearInterval(this.state.timer)
+	}
+	
+	chunkUpdate = () => {
+    this.setState({
+      shouldUpdate: true
+    });
+	}
+	
+	shouldComponentUpdate = (nextProps, nextState) => {
+		if(nextState.shouldUpdate === true)
+			return true
+		return false
+	}
 
-		ws.on('new-stream-data', res => {
-			dispatch(newTweet(res))
-			dispatch(readySocket())
-		});
+	componentDidUpdate = (prevProps, prevState) => {
+		this.setState({
+      shouldUpdate: false
+    });
 	}
 
 	render() {
