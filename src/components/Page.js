@@ -3,7 +3,9 @@ import { connect } from 'react-redux'
 import Tweet from './Tweet/Tweet'
 
 const mapStateToProps = (state = {}) => {
-	return { ...state.tweet };
+	return { new_tweets: state.tweet.new_tweets,
+					 stream: state.filter.stream
+					};
 };
 
 
@@ -32,7 +34,7 @@ class Page extends Component {
 	}
 	
 	shouldComponentUpdate = (nextProps, nextState) => {
-		if(nextState.shouldUpdate === true)
+		if(nextState.shouldUpdate === true && nextProps.stream )
 			return true
 		return false
 	}
