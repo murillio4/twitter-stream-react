@@ -83,8 +83,7 @@ class Menu extends Component {
           }}
           onClick={this.toggleStream}
         >
-          {stream ? 'Stop' : 'Start'}
-          stream
+          {stream ? 'Stop' : 'Start'} stream
         </MenuItem>
         <Divider />
         <SelectField
@@ -96,7 +95,7 @@ class Menu extends Component {
             paddingTop: '7px'
           }}
         >
-          <MenuItem value={''} primaryText="All Languages" />{' '}
+          <MenuItem value={''} primaryText="All Languages" />
           {languages
             .all()
             .map((lang, key) => (
