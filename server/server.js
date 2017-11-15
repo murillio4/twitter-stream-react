@@ -52,7 +52,6 @@ const check_validate_json = data => {
  * On new connection 
  */
 io.on('connection', ws => {
-  //set ready to false
   ws.ready = true;
 
   /**
